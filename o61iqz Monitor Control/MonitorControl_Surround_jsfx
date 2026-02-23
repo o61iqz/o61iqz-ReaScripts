@@ -1,0 +1,157 @@
+desc:o61iqz Monitor Control - Surround (o61iqz)
+version: 1.0
+author: o61iqz
+//tags: processing routing monitor surround
+
+slider1:0<-60,12,0.1>Gain
+slider2:0<0,1,1{Off,On}>Dim
+slider3:0<0,1,1{Off,On}>Mute
+slider4:1<0,4,1{Quad,5.1,7.1,7.1.2,7.1.4}>Surround Mode
+slider5:0<0,1,1{Normal,Inverted}>Phase Invert
+slider6:0<0,1,1{Normal,Flipped}>Channel Flip
+slider7:0<0,1,1{Normal,Mono}>Mono Sum
+slider10:0<0,1,1{Unmuted,Muted}>Mute L
+slider11:0<0,1,1{Unmuted,Muted}>Mute R
+slider12:0<0,1,1{Unmuted,Muted}>Mute C/Lr (Quad)
+slider13:0<0,1,1{Unmuted,Muted}>Mute LFE/Rr (Quad)
+slider14:0<0,1,1{Unmuted,Muted}>Mute Lrs
+slider15:0<0,1,1{Unmuted,Muted}>Mute Rrs
+slider16:0<0,1,1{Unmuted,Muted}>Mute Ls
+slider17:0<0,1,1{Unmuted,Muted}>Mute Rs
+slider18:0<0,1,1{Unmuted,Muted}>Mute Ltm/Ltf
+slider19:0<0,1,1{Unmuted,Muted}>Mute Rtm/Rtf
+slider20:0<0,1,1{Unmuted,Muted}>Mute Ltr
+slider21:0<0,1,1{Unmuted,Muted}>Mute Rtr
+slider30:200<20,2000,1>Low/Mid Crossover
+slider31:2000<200,15000,1>Mid/High Crossover
+slider32:0<0,1,1{Off,Solo}>Solo Low
+slider33:0<0,1,1{Off,Solo}>Solo Mid
+slider34:0<0,1,1{Off,Solo}>Solo High
+slider40:-12<-24,-6,1>Dim Level
+
+in_pin:L
+in_pin:R
+in_pin:C/Lr
+in_pin:LFE/Rr
+in_pin:Lrs
+in_pin:Rrs
+in_pin:Ls
+in_pin:Rs
+in_pin:Ltm/Ltf
+in_pin:Rtm/Rtf
+in_pin:Ltr
+in_pin:Rtr
+out_pin:L
+out_pin:R
+out_pin:C/Lr
+out_pin:LFE/Rr
+out_pin:Lrs
+out_pin:Rrs
+out_pin:Ls
+out_pin:Rs
+out_pin:Ltm/Ltf
+out_pin:Rtm/Rtf
+out_pin:Ltr
+out_pin:Rtr
+
+@init
+smooth_coef = exp(-1.0 / (0.02 * srate));
+init_done = 0;
+
+lp1_low_m = 0;
+lp2_low_m = 16;
+lp1_mid_m = 32;
+lp2_mid_m = 48;
+
+@slider
+num_channels = 4 + slider4 * 2;
+
+db_gain = slider1;
+slider2 == 1 ? db_gain += slider40;
+
+slider3 == 1 ? (
+  target_gain = 0.0;
+) : (
+  target_gain = 10 ^ (db_gain / 20.0);
+);
+
+slider5 == 1 ? target_gain = -target_gain;
+
+init_done == 0 ? (
+  current_gain = target_gain;
+  init_done = 1;
+);
+
+a_low = exp(-2.0 * $pi * slider30 / srate);
+b_low = 1.0 - a_low;
+
+a_mid = exp(-2.0 * $pi * slider31 / srate);
+b_mid = 1.0 - a_mid;
+
+solo_l = slider32;
+solo_m = slider33;
+solo_h = slider34;
+any_solo = solo_l || solo_m || solo_h;
+
+@sample
+slider6 == 1 ? (
+  tf = spl0; spl0 = spl1; spl1 = tf;
+  tr = spl4; spl4 = spl5; spl5 = tr;
+  ts = spl6; spl6 = spl7; spl7 = ts;
+  tts = spl8; spl8 = spl9; spl9 = tts;
+  ttr = spl10; spl10 = spl11; spl11 = ttr;
+);
+
+slider7 == 1 ? (
+  slider4 == 0 ? ( sum = (spl0 + spl1) * 0.707 + (spl2 + spl3) * 0.707 ) : (
+    sum = (spl0 + spl1) * 0.707 + spl2 + spl3 + (spl4 + spl5) * 0.707;
+    i = 0;
+    loop(slider4 - 1,
+      sum += (spl(6+2*i) + spl(7+2*i)) * 0.707;
+    );
+  );
+  
+  i = 0;
+  loop(num_channels,
+    spl(i) = sum / num_channels;
+    i += 1;
+  );
+);
+
+current_gain = (current_gain * smooth_coef) + (target_gain * (1.0 - smooth_coef));
+
+i = 0;
+loop(num_channels,
+  slider(10 + i) == 1 ? (
+    spl(i) = 0;
+  ) : (
+    spl(i) *= current_gain;
+    
+    in_sig = spl(i);
+    
+    lp1_low_m[i] = b_low * in_sig + a_low * lp1_low_m[i];
+    lp2_low_m[i] = b_low * lp1_low_m[i] + a_low * lp2_low_m[i];
+    band_low = lp2_low_m[i];
+    
+    lp1_mid_m[i] = b_mid * in_sig + a_mid * lp1_mid_m[i];
+    lp2_mid_m[i] = b_mid * lp1_mid_m[i] + a_mid * lp2_mid_m[i];
+    
+    band_mid = lp2_mid_m[i] - band_low;
+    band_high = in_sig - lp2_mid_m[i];
+    
+    any_solo ? (
+      spl(i) = 0;
+      solo_l ? spl(i) += band_low;
+      solo_m ? spl(i) += band_mid;
+      solo_h ? spl(i) += band_high;
+    );
+  );
+  
+  i += 1;
+);
+
+i = 0;
+loop(12 - num_channels,
+  spl(11-i) = 0;
+  i += 1;
+);
