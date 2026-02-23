@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -17,5 +19,5 @@ jobs:
       - name: Install Reapack-Index
         run: gem install reapack-index
       - name: Build Index
-        run: reapack-index -s -a -C
+        run: reapack-index -n "o61iqz ReaScripts" -s -C
          
