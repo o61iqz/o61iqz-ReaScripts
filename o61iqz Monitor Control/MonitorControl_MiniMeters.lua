@@ -5,7 +5,7 @@
 --    Stereo monitor control center with various features for REAPER. With MiniMeters quick launch option.
 -- @provides
 --    [main] .
---    ../Effects/MonitorControl.jsfx
+--    MonitorControl.jsfx
 
 if not reaper.ImGui_CreateContext then
   reaper.MB("Please install the ReaImGui extension via ReaPack.", "Error", 0)

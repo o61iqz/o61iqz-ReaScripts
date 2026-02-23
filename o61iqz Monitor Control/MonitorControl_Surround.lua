@@ -5,7 +5,7 @@
 --    Surround monitor control center with various features for REAPER. Up to 7.1.4 (12 channels)
 -- @provides
 --    [main] .
---    ../Effects/MonitorControlSurround.jsfx
+--    MonitorControlSurround.jsfx
 
 if not reaper.ImGui_CreateContext then
   reaper.MB("Please install the ReaImGui extension via ReaPack.", "Error", 0)

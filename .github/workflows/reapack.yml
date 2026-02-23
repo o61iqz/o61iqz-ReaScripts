@@ -24,6 +24,6 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
       - name: Build Index
         run: |
-          reapack-index -n "o61iqz ReaScripts" -s -C
+          reapack-index -n "o61iqz ReaScripts" -s -a -C
           git push
          
