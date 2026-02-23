@@ -1,0 +1,20 @@
+name: ReaPack Indexing
+on:
+  push:
+    branches: (main)
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0'
+      - name: Install Reapack-Index
+        run: gem install reapack-index
+      - name: Build Index
+        run: reapack-index -s -a -C
