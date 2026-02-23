@@ -1,7 +1,7 @@
 name: ReaPack Indexing
 on:
   push:
-    branches: (main)
+    branches: [ "main" ]
 permissions:
   contents: write
 jobs:
@@ -18,3 +18,4 @@ jobs:
         run: gem install reapack-index
       - name: Build Index
         run: reapack-index -s -a -C
+         
