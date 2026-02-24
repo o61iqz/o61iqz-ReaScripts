@@ -1,2 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="o61iqz ReaScripts"/>
+<index version="1" name="o61iqz ReaScripts" commit="ebae0d2930ac800e3bb519cc0d7eda3cdcf1bc00">
+  <category name="o61iqz Monitor Control">
+    <reapack name="MonitorControl.lua" type="script" desc="o61iqz Monitor Control (Stereo)">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Stereo monitor control center with various features for REAPER.\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.0" author="o61iqz" time="2026-02-23T11:29:18Z">
+        <source main="main">https://github.com/o61iqz/o61iqz-ReaScripts/raw/ebae0d2930ac800e3bb519cc0d7eda3cdcf1bc00/o61iqz%20Monitor%20Control/MonitorControl.lua</source>
+        <source file="MonitorControl_jsfx">https://github.com/o61iqz/o61iqz-ReaScripts/raw/ebae0d2930ac800e3bb519cc0d7eda3cdcf1bc00/o61iqz%20Monitor%20Control/MonitorControl_jsfx</source>
+      </version>
+    </reapack>
+  </category>
+</index>
