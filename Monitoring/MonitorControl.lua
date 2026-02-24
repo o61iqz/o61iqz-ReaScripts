@@ -1,8 +1,6 @@
 -- @description o61iqz Monitor Control
 -- @version 1.0
 -- @author o61iqz
--- @about
---    Monitor control center with various features for REAPER.
 -- @provides
 --    [main] .
 --    [main] MonitorControl_MiniMeters.lua
