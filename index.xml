@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="o61iqz ReaScripts" commit="ebae0d2930ac800e3bb519cc0d7eda3cdcf1bc00">
+<index version="1" commit="ebae0d2930ac800e3bb519cc0d7eda3cdcf1bc00">
   <category name="o61iqz Monitor Control">
     <reapack name="MonitorControl.lua" type="script" desc="o61iqz Monitor Control (Stereo)">
       <metadata>
