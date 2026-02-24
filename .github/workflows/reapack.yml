@@ -24,7 +24,6 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
       - name: Build Index
         run: |
-          reapack-index
-          reapack-index -a -C
+          reapack-index -C
           git push
          
