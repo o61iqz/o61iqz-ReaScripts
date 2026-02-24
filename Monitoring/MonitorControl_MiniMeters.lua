@@ -338,7 +338,7 @@ function loop()
       end
       
     else
-      reaper.ImGui_Text(ctx, "o61iqz Monitor Control FX missing.")
+      reaper.ImGui_Text(ctx, "o61iqz Monitor Control FX missing. Try rescan FX browser and reopen monitoring FX window.")
     end
 
     reaper.ImGui_End(ctx)

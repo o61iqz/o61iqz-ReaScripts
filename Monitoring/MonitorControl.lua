@@ -7,6 +7,9 @@
 --    [main] MonitorControl_Surround.lua
 --    [effect] MonitorControl.jsfx > ../../../Effects/o61iqz/MonitorControl.jsfx
 --    [effect] MonitorControl_Surround.jsfx > ../../../Effects/o61iqz/MonitorControl_Surround.jsfx
+-- @changelog
+--    Added hint text when unable to find monitor control FX
+--    Fixed FX install into a wrong directory
 
 if not reaper.ImGui_CreateContext then
   reaper.MB("Please install the ReaImGui extension via ReaPack.", "Error", 0)
@@ -247,7 +250,7 @@ function loop()
       end
       
     else
-      reaper.ImGui_Text(ctx, "o61iqz Monitor Control FX missing.")
+      reaper.ImGui_Text(ctx, "o61iqz Monitor Control FX missing. Try rescan FX browser and reopen monitoring FX window.")
     end
 
     reaper.ImGui_End(ctx)
