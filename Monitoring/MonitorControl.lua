@@ -5,8 +5,8 @@
 --    [main] .
 --    [main] MonitorControl_MiniMeters.lua
 --    [main] MonitorControl_Surround.lua
---    MonitorControl.jsfx > ../Effects/o61iqz/MonitorControl.jsfx
---    MonitorControl_Surround.jsfx > ../Effects/o61iqz/MonitorControl_Surround.jsfx
+--    [jsfx] MonitorControl.jsfx
+--    [jsfx] MonitorControl_Surround.jsfx
 
 if not reaper.ImGui_CreateContext then
   reaper.MB("Please install the ReaImGui extension via ReaPack.", "Error", 0)
