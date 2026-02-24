@@ -1,21 +1,20 @@
--- @description o61iqz Monitor Control (Stereo) - MMQL
+-- @description o61iqz Monitor Control
 -- @version 1.0
 -- @author o61iqz
 -- @about
---    Stereo monitor control center with various features for REAPER. With MiniMeters quick launch option.
+--    Stereo monitor control center with various features for REAPER.
 -- @provides
 --    [main] .
---    MonitorControl_jsfx
+--    [jsfx] ../Effects/MonitorControl.jsfx
 
 if not reaper.ImGui_CreateContext then
   reaper.MB("Please install the ReaImGui extension via ReaPack.", "Error", 0)
   return
 end
 
-local ctx = reaper.ImGui_CreateContext('o61iqz Monitor Control (Stereo)')
+local ctx = reaper.ImGui_CreateContext('o61iqz Monitor Control')
 local master_track = reaper.GetMasterTrack(0)
 local fx_name = "o61iqz Monitor Control (Stereo)"
-local mm_fx_name = "MiniMeters - Audio-Server"
 local MONITOR_FX_OFFSET = 0x1000000
 
 local PARAM = {
@@ -23,20 +22,12 @@ local PARAM = {
   LMCROSS = 7, MHCROSS = 8, LSOLO = 9, MSOLO = 10, HSOLO = 11, DIMLV = 12
 }
 
-local mm_path = reaper.GetExtState("MonitorControl", "MiniMetersPath")
-local mm_set = tonumber(reaper.GetExtState("MonitorControl", "MiniMetersSet")) or 0
-
 local band_state = {}
 for _, p in ipairs({PARAM.LSOLO, PARAM.MSOLO, PARAM.HSOLO}) do
   band_state[p] = { muted = false, soloed = false }
 end
 
 local initialized = false
-
-local function FileExists(path)
-  local f = io.open(path, "r")
-  if f then f:close() return true else return false end
-end
 
 local function UpdateBands(fx_idx)
   local any_solo = false
@@ -142,28 +133,9 @@ local function DrawBandButton(label, fx_idx, param_id)
   reaper.ImGui_SameLine(ctx)
 end
 
-local function SetMiniMetersPosition(set_post)
-  local mm_raw = reaper.TrackFX_AddByName(master_track, mm_fx_name, true, 0)
-  local mon_raw = reaper.TrackFX_AddByName(master_track, fx_name, true, 0)
-  
-  if mm_raw >= 0 and mon_raw >= 0 then
-    
-    if set_post and mm_raw > mon_raw then return end
-    if not set_post and mm_raw < mon_raw then return end
-    
-    reaper.TrackFX_CopyToTrack(
-      master_track,
-      MONITOR_FX_OFFSET + mm_raw,
-      master_track,
-      MONITOR_FX_OFFSET + mon_raw,
-      true
-    )
-  end
-end
-
 function loop()
   local window_flags = reaper.ImGui_WindowFlags_AlwaysAutoResize()
-  local visible, open = reaper.ImGui_Begin(ctx, 'o61iqz Monitor Control (Stereo) - MMQL', true, window_flags)
+  local visible, open = reaper.ImGui_Begin(ctx, 'o61iqz Monitor Control', true, window_flags)
 
   if visible then
     local raw_idx = reaper.TrackFX_AddByName(master_track, fx_name, true, 1)
@@ -190,7 +162,7 @@ function loop()
       local cross_mh = reaper.TrackFX_GetParam(master_track, fx_idx, PARAM.MHCROSS)
 
       reaper.ImGui_PushStyleVar(ctx, reaper.ImGui_StyleVar_ItemSpacing(), 4, 0)
-      
+
       -- Gain Slider
       reaper.ImGui_SetNextItemWidth(ctx, 120) 
       local chg_gain, new_gain = reaper.ImGui_SliderDouble(ctx, '##gain', cur_gain, -60.0, 12.0, '%.1f dB')
@@ -226,59 +198,15 @@ function loop()
       DrawBandButton('Mid', fx_idx, PARAM.MSOLO)
       DrawBandButton('High', fx_idx, PARAM.HSOLO)
       reaper.ImGui_SameLine(ctx)
-      
-      -- MiniMeters
-      reaper.ImGui_Text(ctx, "| MiniMeters:")
-      reaper.ImGui_SameLine(ctx)
-      
-      local mm_raw = reaper.TrackFX_AddByName(master_track, mm_fx_name, true, 0)
-      local mon_raw = raw_idx
-      local path_exists = FileExists(mm_path)
-      
-      if reaper.ImGui_Button(ctx, "Launch") then
-        if mm_set == 1 and path_exists then
-          local os_name = reaper.GetOS()
-          if os_name:match("Win") then
-            os.execute('start "" "' .. mm_path .. '"')
-          else
-            os.execute('open "' .. mm_path .. '" &')
-          end
-          
-          if mm_raw < 0 then
-            local new_mm = reaper.TrackFX_AddByName(master_track, mm_fx_name, true, 1)
-            if new_mm == -1 then
-               reaper.MB("MiniMeters - Audio-Server plugin not found.", "Error", 0)
-            else
-               SetMiniMetersPosition(false)
-            end
-          end
-        else
-          local retval, filename = reaper.GetUserFileNameForRead(mm_path, "Select MiniMeters Application", "")
-          if retval then
-            mm_path = filename
-            mm_set = 1
-            reaper.SetExtState("MonitorControl", "MiniMetersPath", mm_path, true)
-            reaper.SetExtState("MonitorControl", "MiniMetersSet", "1", true)
-          end
-        end
-      end
-      
-      if mm_set == 1 and not path_exists then
-        if reaper.ImGui_IsItemHovered(ctx) then
-          reaper.ImGui_SetTooltip(ctx, "Invalid path! Click to re-locate MiniMeters.")
-        end
-      end
-      
-      reaper.ImGui_SameLine(ctx)
 
       -- Options
       reaper.ImGui_Text(ctx, "|")
       reaper.ImGui_SameLine(ctx)
-      
+
       if reaper.ImGui_Button(ctx, "Options") then
         reaper.ImGui_OpenPopup(ctx, "OptionsPopup")
       end
-      
+
       if reaper.ImGui_BeginPopup(ctx, "OptionsPopup") then
       
         reaper.ImGui_PushStyleVar(ctx, reaper.ImGui_StyleVar_ItemSpacing(), 0, 4)
@@ -289,7 +217,7 @@ function loop()
         if reaper.ImGui_IsItemHovered(ctx) and reaper.ImGui_IsMouseDoubleClicked(ctx, 0) then
           reaper.TrackFX_SetParam(master_track, fx_idx, PARAM.DIMLV, -12.0)
         end
-        
+
         reaper.ImGui_Separator(ctx)
         reaper.ImGui_TextDisabled(ctx, "Filter Crossover Frequencies")
         
@@ -306,38 +234,11 @@ function loop()
         if reaper.ImGui_IsItemHovered(ctx) and reaper.ImGui_IsMouseDoubleClicked(ctx, 0) then
           reaper.TrackFX_SetParam(master_track, fx_idx, PARAM.MHCROSS, 2000.0)
         end
-        
-        reaper.ImGui_Dummy(ctx, 0, 2)
-        reaper.ImGui_SeparatorText(ctx, " MiniMeters ")
-        
-        if reaper.ImGui_MenuItem(ctx, "Set MiniMeters Path...") then
-          local retval, filename = reaper.GetUserFileNameForRead(mm_path, "Select MiniMeters Application", "")
-          if retval then
-            mm_path = filename
-            mm_set = 1
-            reaper.SetExtState("MonitorControl", "MiniMetersPath", mm_path, true)
-            reaper.SetExtState("MonitorControl", "MiniMetersSet", "1", true)
-          end
-        end
-        
-        local is_pre = mm_raw >= 0 and mm_raw < mon_raw
-        local is_post = mm_raw >= 0 and mm_raw > mon_raw
-        
-        reaper.ImGui_Separator(ctx)
-        reaper.ImGui_TextDisabled(ctx, "MiniMeters FX Position")
-        
-        if reaper.ImGui_MenuItem(ctx, "Pre-Monitor Control", nil, is_pre, mm_raw >= 0) then
-          SetMiniMetersPosition(false)
-        end
-        if reaper.ImGui_MenuItem(ctx, "Post-Monitor Control", nil, is_post, mm_raw >= 0) then
-          SetMiniMetersPosition(true)
-        end
-        
         reaper.ImGui_PopStyleVar(ctx, 1)
         
         reaper.ImGui_EndPopup(ctx)
       end
-      
+
       reaper.ImGui_PopStyleVar(ctx, 1)
       
       if reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_Space()) and not reaper.ImGui_IsAnyItemActive(ctx) then
