@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<index version="1" name="o61iqz ReaScripts" commit="53ae20da5ac93c0bc55c733078574c2613bf232e">
+  <category name="Monitoring">
+    <reapack name="MonitorControl.lua" type="script" desc="o61iqz Monitor Control">
+      <version name="1.0" author="o61iqz" time="2026-02-24T12:39:04Z">
+        <source main="main">https://github.com/o61iqz/o61iqz-ReaScripts/raw/439f2e4f83eae990553151ef5a45161c7fdee5b9/Monitoring/MonitorControl.lua</source>
+        <source main="main" file="MonitorControl_MiniMeters.lua">https://github.com/o61iqz/o61iqz-ReaScripts/raw/439f2e4f83eae990553151ef5a45161c7fdee5b9/Monitoring/MonitorControl_MiniMeters.lua</source>
+        <source main="main" file="MonitorControl_Surround.lua">https://github.com/o61iqz/o61iqz-ReaScripts/raw/439f2e4f83eae990553151ef5a45161c7fdee5b9/Monitoring/MonitorControl_Surround.lua</source>
+        <source file="MonitorControl.jsfx">https://github.com/o61iqz/o61iqz-ReaScripts/raw/439f2e4f83eae990553151ef5a45161c7fdee5b9/Monitoring/MonitorControl.jsfx</source>
+        <source file="MonitorControl_Surround.jsfx">https://github.com/o61iqz/o61iqz-ReaScripts/raw/439f2e4f83eae990553151ef5a45161c7fdee5b9/Monitoring/MonitorControl_Surround.jsfx</source>
+      </version>
+    </reapack>
+  </category>
+</index>
