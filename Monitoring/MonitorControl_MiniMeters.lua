@@ -1,11 +1,4 @@
--- @description o61iqz Monitor Control with MiniMeters Quick Launch
--- @version 1.0
--- @author o61iqz
--- @about
---    Stereo monitor control center with various features for REAPER. With MiniMeters quick launch option.
--- @provides
---    [main] .
---    [jsfx] ../Effects/MonitorControl.jsfx
+-- @noindex
 
 if not reaper.ImGui_CreateContext then
   reaper.MB("Please install the ReaImGui extension via ReaPack.", "Error", 0)

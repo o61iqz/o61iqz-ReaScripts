@@ -2,10 +2,13 @@
 -- @version 1.0
 -- @author o61iqz
 -- @about
---    Stereo monitor control center with various features for REAPER.
+--    Monitor control center with various features for REAPER.
 -- @provides
 --    [main] .
---    [jsfx] ../Effects/MonitorControl.jsfx
+--    [main] MonitorControl_MiniMeters.lua
+--    [main] MonitorControl_Surround.lua
+--    MonitorControl.jsfx > ../Effects/o61iqz/MonitorControl.jsfx
+--    MonitorControl_Surround.jsfx > ../Effects/o61iqz/MonitorControl_Surround.jsfx
 
 if not reaper.ImGui_CreateContext then
   reaper.MB("Please install the ReaImGui extension via ReaPack.", "Error", 0)

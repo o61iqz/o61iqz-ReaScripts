@@ -1,11 +1,4 @@
--- @description o61iqz Monitor Control (Surround)
--- @version 1.0
--- @author o61iqz
--- @about
---    Surround monitor control center with various features for REAPER. Up to 7.1.4 (12 channels)
--- @provides
---    [main] .
---    [jsfx] ../Effects/MonitorControl_Surround.jsfx
+-- @noindex
 
 if not reaper.ImGui_CreateContext then
   reaper.MB("Please install the ReaImGui extension via ReaPack.", "Error", 0)
