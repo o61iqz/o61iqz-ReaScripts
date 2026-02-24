@@ -25,6 +25,6 @@ jobs:
       - name: Build Index
         run: |
           reapack-index
-          reapack-index -a
+          reapack-index -a -C
           git push
          
